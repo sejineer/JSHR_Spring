@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -29,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.create(member);
     }
 
-    @Transactional
     public UserDetails loadUserById(Long id) {
         Optional<Member> member = memberRepository.findById(id);
         DefaultAssert.isOptionalPresent(member);
