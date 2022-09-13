@@ -67,6 +67,10 @@ public class Member extends BaseEntity {
         this.providerId = providerId;
     }
 
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
     public void updateName(String name) {
         this.name = name;
     }
