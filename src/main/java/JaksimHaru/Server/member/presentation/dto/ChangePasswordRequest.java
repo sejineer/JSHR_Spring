@@ -1,4 +1,4 @@
-package JaksimHaru.Server.auth.presentation.dto.request;
+package JaksimHaru.Server.member.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,12 +1,10 @@
 package JaksimHaru.Server.auth.application;
 
-import JaksimHaru.Server.auth.presentation.dto.request.ChangePasswordRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.RefreshTokenRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.SignInRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.SignUpRequest;
 import JaksimHaru.Server.auth.presentation.dto.response.AuthResponse;
 import JaksimHaru.Server.common.application.CustomTokenProviderService;
-import JaksimHaru.Server.common.config.token.UserPrincipal;
 import JaksimHaru.Server.common.dto.ApiResponse;
 import JaksimHaru.Server.common.dto.Message;
 import JaksimHaru.Server.common.dto.TokenMapping;
@@ -44,30 +42,6 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
-
-    public ResponseEntity<?> me(UserPrincipal userPrincipal) {
-        Optional<Member> member = memberRepository.findById(userPrincipal.getId());
-        DefaultAssert.isOptionalPresent(member);
-
-        ApiResponse apiResponse = ApiResponse.builder().check(true).information(member.get()).build();
-        return ResponseEntity.ok(apiResponse);
-    }
-
-    @Transactional
-    public ResponseEntity<?> changePassword(UserPrincipal userPrincipal, ChangePasswordRequest changePasswordRequest) {
-        Optional<Member> member = memberRepository.findById(userPrincipal.getId());
-        boolean passwordCheck = passwordEncoder.matches(changePasswordRequest.getOldPassword(), member.get().getPassword());
-        DefaultAssert.isTrue(passwordCheck, "잘못된 비밀번호 입니다.");
-
-        boolean newPasswordCheck = changePasswordRequest.getNewPassword().equals(changePasswordRequest.getReNewPassword());
-        DefaultAssert.isTrue(newPasswordCheck, "신규 등록 비밀번호 값이 일치하지 않습니다.");
-
-        String newPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
-        member.get().changePassword(newPassword);
-
-        ApiResponse apiResponse = ApiResponse.builder().check(true).information(Message.builder().message("비밀번호가 변경되었습니다.")).build();
-        return ResponseEntity.ok(apiResponse);
-    }
 
     @Transactional
     public ResponseEntity<?> signUp(SignUpRequest signUpRequest) {

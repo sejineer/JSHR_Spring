@@ -1,7 +1,6 @@
 package JaksimHaru.Server.auth.presentation;
 
 import JaksimHaru.Server.auth.application.AuthService;
-import JaksimHaru.Server.auth.presentation.dto.request.ChangePasswordRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.RefreshTokenRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.SignInRequest;
 import JaksimHaru.Server.auth.presentation.dto.request.SignUpRequest;
@@ -10,7 +9,6 @@ import JaksimHaru.Server.common.config.token.CurrentUser;
 import JaksimHaru.Server.common.config.token.UserPrincipal;
 import JaksimHaru.Server.common.dto.Message;
 import JaksimHaru.Server.common.exception.advice.payload.ErrorResponse;
-import JaksimHaru.Server.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,32 +29,6 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-
-    @Operation(summary = "유저 정보 확인", description = "현재 접속된 유저정보를 확인합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 확인 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Member.class))}),
-            @ApiResponse(responseCode = "400", description = "유저 확인 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-    })
-    @GetMapping("/me")
-    public ResponseEntity<?> me(
-            @Parameter(description = "AccessToken을 입력해주세요", required = true) @CurrentUser UserPrincipal userPrincipal
-    ) {
-        return authService.me(userPrincipal);
-    }
-
-    @Operation(summary = "유저 정보 갱신", description = "현재 접속된 유저의 비밀번호를 새로 지정합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 정보 갱신 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
-            @ApiResponse(responseCode = "400", description = "유저 정보 갱신 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-    })
-    @PutMapping("/me")
-    public ResponseEntity<?> changePassword(
-            @Parameter(description = "AccessToken을 입력해주세요", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "Schema => ChangePasswordRequest", required = true) @Valid @RequestBody ChangePasswordRequest changePasswordRequest
-    ) {
-        return authService.changePassword(userPrincipal, changePasswordRequest);
-    }
-
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입")
     @ApiResponses(value = {
